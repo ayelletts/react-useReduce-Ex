@@ -1,21 +1,16 @@
 import React, { useReducer, useState } from 'react';
 import './style.css';
 
-export default function App() {
-  const [counter, dispatch] = useReducer(reducer, 0);
-  const [count, setCount] = useState(0);
+const initialState = { counter: 0, numOfActions: 0 };
 
-  function reducer(state, action) {
-    console.log(action);
-    switch (action.type) {
-      case 'increment':
-        return state + 1;
-      case 'decrement':
-        return state - 1;
-      default:
-        throw new Error(`action: ${action.type}`);
-    }
-  }
+const reducer = (state, action) => ({
+  counter: action.type === 'increment' ? state.counter + 1 : state.counter - 1,
+  numOfActions: state.numOfActions + 1,
+});
+
+export default function App() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const [count, setCount] = useState(0);
 
   const onClick = (e) => {
     if (e.target.id === 'inc') {
@@ -28,7 +23,8 @@ export default function App() {
 
   return (
     <>
-      <h1>Reducer Counter: {counter}</h1>
+      <h1>Reducer Counter: {state.counter}</h1>
+      <h1>Reducer Num of actions: {state.numOfActions}</h1>
       <button onClick={() => dispatch({ type: 'decrement' })}>-</button>
       <button onClick={() => dispatch({ type: 'increment' })}>+</button>
 
